@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I'm Sorry 💜</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', 'Trebuchet MS', sans-serif;
+    background: linear-gradient(160deg, #2b0a3d, #4b1d73, #7b2ff7);
+    background-size: 400% 400%;
+    animation: gradientShift 12s ease infinite;
+    overflow-x: hidden;
+    position: relative;
+  }
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .stars {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .stars span {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: twinkle 3s infinite ease-in-out;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.5); }
+  }
+
+  .card {
+    position: relative;
+    z-index: 1;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 28px;
+    padding: 40px 30px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    text-shadow: 0 0 20px rgba(255,255,255,0.5);
+  }
+
+  .bear {
+    font-size: 4rem;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  p {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #f1e6ff;
+    margin: 18px 0;
+  }
+
+  .btn-row {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 25px;
+    min-height: 60px;
+  }
+
+  button {
+    border: none;
+    padding: 14px 26px;
+    border-radius: 40px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  #yesBtn {
+    background: linear-gradient(135deg, #c084fc, #7b2ff7);
+    color: white;
+    box-shadow: 0 8px 20px rgba(123,47,247,0.5);
+  }
+  #yesBtn:hover { transform: scale(1.08); }
+
+  #noBtn {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    position: relative;
+    transition: transform 0.15s ease, left 0.15s ease, top 0.15s ease;
+  }
+
+  .hidden { display: none; }
+
+  .reveal {
+    animation: popIn 0.6s ease;
+  }
+  @keyframes popIn {
+    0% { transform: scale(0.7); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .confetti-burst {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 5;
+  }
+  .confetti {
+    position: absolute;
+    bottom: -20px;
+    font-size: 1.5rem;
+    animation: rise 4s linear forwards;
+    opacity: 0.9;
+  }
+  @keyframes rise {
+    to { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+  }
+
+  .small {
+    font-size: 0.85rem;
+    color: #d8c4ff;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="confetti-burst" id="confettiBurst"></div>
+
+<div class="card">
+  <div class="bear">🙈💜</div>
+  <h1 id="mainTitle">Okay I was in the wrong</h1>
+  <p id="mainText">I shouldn't have called you rude or said what I said. That wasn't fair to you and I know it hurt. You're actually one of the good ones and I feel bad for how I acted.</p>
+
+  <div id="questionBlock">
+    <p><strong>Are we good?</strong></p>
+    <div class="btn-row">
+      <button id="yesBtn" onclick="forgive()">Yes we're good 💜</button>
+      <button id="noBtn" onmouseover="dodge()" ontouchstart="dodge(event)">No</button>
+    </div>
+  </div>
+
+  <div id="finalBlock" class="hidden reveal">
+    <h1>Yayy!! 💜</h1>
+    <p>Thank you for not holding it against me. I'll watch what I say next time. You're a great friend and I don't want any bad vibes between us.</p>
+    <p class="small">sent with a lot of purple apologies</p>
+  </div>
+</div>
+
+<script>
+  // twinkling stars
+  const starsContainer = document.getElementById('stars');
+  for (let i = 0; i < 40; i++) {
+    const s = document.createElement('span');
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 100 + '%';
+    s.style.animationDelay = (Math.random() * 3) + 's';
+    starsContainer.appendChild(s);
+  }
+
+  let dodgeCount = 0;
+  function dodge(e) {
+    const btn = document.getElementById('noBtn');
+    dodgeCount++;
+    if (dodgeCount > 6) {
+      btn.style.display = 'none';
+      return;
+    }
+    const maxX = 120, maxY = 60;
+    const x = (Math.random() - 0.5) * maxX;
+    const y = (Math.random() - 0.5) * maxY;
+    btn.style.position = 'relative';
+    btn.style.left = x + 'px';
+    btn.style.top = y + 'px';
+
+    const texts = ["No", "Nuh uh", "Try again", "Nope 😤", "Not happening", "Almost!", "Nice try"];
+    btn.innerText = texts[Math.min(dodgeCount, texts.length - 1)];
+  }
+
+  function forgive() {
+    document.getElementById('questionBlock').classList.add('hidden');
+    document.getElementById('finalBlock').classList.remove('hidden');
+    document.getElementById('mainTitle').innerText = "You're the best 💜";
+    document.getElementById('mainText').innerText = "";
+    burstConfetti();
+  }
+
+  function burstConfetti() {
+    const container = document.getElementById('confettiBurst');
+    const pieces = ['💜','✨','🎉','🩵','⭐'];
+    for (let i = 0; i < 35; i++) {
+      setTimeout(() => {
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.innerText = pieces[Math.floor(Math.random() * pieces.length)];
+        c.style.left = Math.random() * 100 + '%';
+        c.style.animationDuration = (3 + Math.random() * 2) + 's';
+        container.appendChild(c);
+        setTimeout(() => c.remove(), 5000);
+      }, i * 80);
+    }
+  }
+</script>
+
+</body>
+</html>
